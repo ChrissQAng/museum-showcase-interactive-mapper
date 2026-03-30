@@ -21,7 +21,8 @@ const rawCSV = `vitrine_id,object_number,pos_x,pos_y,text_de,text_en,text_jp
 2,3,50,35,"Nena Kerner"
 2,4,75,15,"Arne Augustin"
 2,5,95,15,"Dorfdepp"
-
+3,1,30,30,"Vitrine 3 Objekt 1 – Beschreibung DE","Vitrine 3 Object 1 – Description EN","ビトリーネ3オブジェクト1 – 説明JP"
+3,2,60,50,"Vitrine 3 Objekt 2 – Beschreibung DE","Vitrine 3 Object 2 – Description EN","ビトリーネ3オブジェクト2 – 説明JP"
 
 `;
 
@@ -65,11 +66,16 @@ export const vitrineConfigs: VitrineConfig[] = [
     {
         id: "1",
         name: "",
-        imageUrl: "/museum1.jpg" // Using local image from public folder
+        imageUrl: "/museum1.jpg"
     },
     {
         id: "2",
         name: "",
-        imageUrl: "/museum2.jpg" // Using local image from public folder
+        imageUrl: "/museum2.jpg"
+    },
+    {
+        id: "3",
+        name: "",
+        imageUrl: "/museum3.jpg"
     }
 ];

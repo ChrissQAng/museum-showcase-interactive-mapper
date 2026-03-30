@@ -132,8 +132,8 @@ const langLabels: Record<Language, string> = {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 9999px;
   background-color: rgba(255, 255, 255, 0.3);
   border: none;
@@ -145,8 +145,7 @@ const langLabels: Record<Language, string> = {
 }
 
 .lang-btn__flag {
-  font-size: 1.5rem;
+  font-size: 3rem;
   line-height: 1;
-  padding-top: 0.25rem;
 }
 </style>

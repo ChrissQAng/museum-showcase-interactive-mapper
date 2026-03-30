@@ -3,11 +3,9 @@ import { ref, computed } from 'vue';
 import { allObjects, vitrineConfigs } from './data';
 import type { MuseumObject, Language, VitrineConfig } from './types';
 import AppHeader from './components/AppHeader.vue';
-// import ShowcaseControls from './components/ShowcaseControls.vue'; // Removed as per request
 import VitrineView from './components/VitrineView.vue';
 import ObjectDetail from './components/ObjectDetail.vue';
 
-// Get first vitrine with fallback
 const defaultVitrine: VitrineConfig = vitrineConfigs[0] ?? {
   id: "1",
   name: "Default Showcase",
@@ -17,9 +15,7 @@ const defaultVitrine: VitrineConfig = vitrineConfigs[0] ?? {
 const language = ref<Language>('de');
 const selectedVitrineId = ref<string>(defaultVitrine.id);
 const selectedObject = ref<MuseumObject | null>(null);
-const showPhoto = ref(true); // Always true as per requirements
 
-// Filter objects based on selected showcase
 const filteredObjects = computed(() => {
   return allObjects.filter(obj => obj.vitrine_id === selectedVitrineId.value);
 });
@@ -47,11 +43,10 @@ const languages: Language[] = ['de', 'en', 'jp'];
         
         <!-- Main Content Area (Showcase View) -->
         <div class="lg:col-span-8">
-          <VitrineView 
+          <VitrineView
             :config="activeVitrine"
             :objects="filteredObjects"
             :selectedObjectId="selectedObject?.object_number ?? null"
-            :showPhoto="showPhoto"
             :language="language"
             @objectSelect="selectedObject = $event"
             @deselect="selectedObject = null"

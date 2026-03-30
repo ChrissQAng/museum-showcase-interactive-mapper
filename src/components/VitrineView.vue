@@ -7,7 +7,6 @@ const props = defineProps<{
   config: VitrineConfig;
   objects: MuseumObject[];
   selectedObjectId: number | null;
-  showPhoto: boolean;
   language: Language;
 }>();
 
@@ -42,46 +41,27 @@ const instructionText = computed(() => {
 <template>
   <div class="relative w-full max-w-5xl mx-auto">
     <!-- Responsive Aspect Ratio Container using 4/3 as a standard showcase ratio -->
-    <div class="relative aspect-[4/3] w-full bg-neutral-900 rounded-lg overflow-hidden shadow-2xl border border-neutral-800">
-      
-      <!-- Background Image Layer -->
-      <div
-        v-if="showPhoto && (displayImageUrl || config.imageUrl)"
-        class="absolute inset-0 w-full h-full bg-center transition-[background-image] duration-500"
-        :class="isDetailView ? 'bg-contain bg-no-repeat' : 'bg-cover'"
-        :style="{
-          backgroundImage: `url(${displayImageUrl ?? config.imageUrl})`
-        }"
-      ></div>
+    <div class="relative aspect-4/3 w-full bg-neutral-900 rounded-lg overflow-hidden border border-neutral-800">
 
-      <!-- Schematic Grid Layer (shown when not in photo mode) -->
-      <div 
-        v-else 
-        class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 to-neutral-950"
-      >
-        <div 
-          class="absolute inset-0 opacity-10" 
-          :style="{ 
-            backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', 
-            backgroundSize: '40px 40px' 
-          }"
-        ></div>
-      </div>
+      <!-- Image Layer -->
+      <img
+        v-if="displayImageUrl || config.imageUrl"
+        :src="displayImageUrl ?? config.imageUrl"
+        alt=""
+        class="absolute inset-0 w-full h-full"
+        :class="isDetailView ? 'object-contain' : 'object-cover'"
+      />
 
-      <!-- Object Markers Layer (hidden in detail view) -->
-      <div v-if="!isDetailView" class="absolute inset-0 pointer-events-none">
-        <div
+      <!-- Object Markers (hidden in detail view) -->
+      <template v-if="!isDetailView">
+        <VitrineItem
           v-for="obj in objects"
           :key="obj.object_number"
-          class="pointer-events-auto"
-        >
-          <VitrineItem
-            :object="obj"
-            :isSelected="selectedObjectId === obj.object_number"
-            @select="emit('objectSelect', $event)"
-          />
-        </div>
-      </div>
+          :object="obj"
+          :isSelected="selectedObjectId === obj.object_number"
+          @select="emit('objectSelect', $event)"
+        />
+      </template>
 
       <!-- Back Arrow (shown in detail view) -->
       <button

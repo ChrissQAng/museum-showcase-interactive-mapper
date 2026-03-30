@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import type { MuseumObject, Language } from '../types';
 
 const props = defineProps<{
-  object: MuseumObject | null;
+  object: MuseumObject;
   language: Language;
 }>();
 
@@ -12,7 +12,6 @@ const emit = defineEmits<{
 }>();
 
 const getText = computed(() => {
-  if (!props.object) return '';
   switch (props.language) {
     case 'de': return props.object.text_de;
     case 'en': return props.object.text_en;
@@ -20,39 +19,12 @@ const getText = computed(() => {
     default: return props.object.text_en;
   }
 });
-
-// const getLabel = computed(() => {
-//   switch (props.language) {
-//     case 'de': return "Objekt-Details";
-//     case 'en': return "Object Details";
-//     case 'jp': return "オブジェクトの詳細";
-//     default: return "Object Details";
-//   }
-// });
 </script>
 
 <template>
-  <!-- Empty State -->
-  <div 
-    v-if="!object"
-    class="h-full flex flex-col items-center justify-center text-neutral-500 p-8 text-center bg-neutral-900/50 rounded-xl border border-dashed border-neutral-800"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    <p class="text-lg text-neutral-600">Bitte wählen Sie ein Objekt aus der Vitrine, um historische Details zu sehen.</p>
-  </div>
-
-  <!-- Object Detail Card -->
-  <div 
-    v-else
-    class="detail-card"
-  >
+  <div class="detail-card">
     <div class="bg-[#c4c5bc] border-b border-neutral-400/50 p-6 flex items-center justify-between">
       <div>
-        <!-- <h2 class="text-neutral-600 text-sm font-semibold tracking-widest uppercase mb-1">
-          {{ getLabel }}
-        </h2> -->
         <span class="text-3xl font-bold text-neutral-800 tracking-tighter">
           {{ object.object_number }}
         </span>
