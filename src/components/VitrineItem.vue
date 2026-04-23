@@ -22,7 +22,7 @@ const emit = defineEmits<{
     }"
     :title="`Object ${object.object_number}`"
   >
-    <span class="vitrine-marker__number">{{ object.object_number }}</span>
+    <span class="vitrine-marker__icon">✕</span>
   </button>
 </template>
 
@@ -33,12 +33,12 @@ const emit = defineEmits<{
   transform: translate(-50%, -50%);
   width: 2rem;
   height: 2rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 0;
+  border: none;
+  background: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(188, 0, 45, 0.5);
   color: white;
   cursor: pointer;
 }
@@ -50,20 +50,15 @@ const emit = defineEmits<{
   }
 }
 
-.vitrine-marker--selected {
-  background-color: #bc002d;
-  border-color: white;
+.vitrine-marker--selected .vitrine-marker__icon {
+  opacity: 1;
+  text-shadow: 0 0 4px white;
 }
 
-.vitrine-marker__number {
-  font-size: 0.75rem;
-  font-weight: 800;
+.vitrine-marker__icon {
+  font-size: 0.85rem;
+  font-weight: 400;
   line-height: 1;
-}
-
-@media (min-width: 768px) {
-  .vitrine-marker__number {
-    font-size: 0.875rem;
-  }
+  opacity: 0.85;
 }
 </style>
