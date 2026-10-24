@@ -19,7 +19,7 @@ const isDetailView = computed(() => props.selectedObjectId !== null);
 
 const displayImageUrl = computed(() => {
   if (props.selectedObjectId !== null) {
-    return `/detailVitrine${props.config.id}/dtv${props.config.id}-${props.selectedObjectId}.png`;
+    return `detailVitrine${props.config.id}/dtv${props.config.id}-${props.selectedObjectId}.png`;
   }
   return props.config.imageUrl;
 });

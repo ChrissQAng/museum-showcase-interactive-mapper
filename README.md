@@ -31,21 +31,33 @@ npm run dev
 
 Die App nutzt relative Koordinaten (0–100%) für X und Y. Dies erlaubt eine skalierbare Darstellung, die unabhängig von der Bildschirmauflösung funktioniert. Durch `absolute` Positionierung innerhalb eines `relative` Containers bleiben die Marker exakt an ihrem logischen Ort, auch wenn das Fenster verkleinert wird.
 
-### Neue Vitrinen hinzufügen
+### Daten bearbeiten (Vitrinen und Objekte)
 
-Um neue Vitrinen hinzuzufügen:
+Alle Inhalte stehen in zwei Tabellendateien, die mit OpenOffice/LibreOffice Calc oder Excel bearbeitet werden:
 
-1. **CSV-Daten erweitern**: Neue Zeilen in die CSV-Struktur einfügen (mit der entsprechenden `vitrine_id`)
-2. **Konfiguration hinzufügen**: In `src/data.ts` eine neue Vitrine-Konfiguration mit ID und optionalem Hintergrundbild ergänzen:
+| Datei | Inhalt | Spalten (Zeile 1) |
+|---|---|---|
+| `public/data/vitrinen.ods` | Liste der Vitrinen | `id`, `name`, `imageUrl` |
+| `public/data/objekte.ods` | alle Objekte aller Vitrinen | `vitrine_id`, `object_number`, `pos_x`, `pos_y`, `text_de`, `text_en`, `text_jp` |
 
-```typescript
-export const vitrineConfigs: VitrineConfig[] = [
-  { id: "1", name: "Vitrine 1", imageUrl: "/museum1.jpg" },
-  { id: "2", name: "Neue Vitrine", imageUrl: "/neue-vitrine.jpg" }, // NEU
-];
-```
+Regeln:
 
-3. Das Interface erkennt die neue ID automatisch.
+- **Zeile 1 enthält die Spaltennamen** – diese nicht umbenennen. Die Reihenfolge der Spalten ist egal.
+- Es wird nur das **erste Tabellenblatt** gelesen; weitere Blätter (z. B. für Notizen) werden ignoriert.
+- `pos_x` / `pos_y` sind Prozentwerte (0–100) bezogen auf das Vitrinenbild.
+- Ungültige Zeilen (z. B. fehlende `vitrine_id` oder Position) werden übersprungen und in der Browser-Konsole gemeldet.
+- Statt `.ods` kann auch `.xlsx` verwendet werden – dann die Dateinamen oben in `src/data.ts` anpassen.
+
+Die Dateien werden beim Start der App geladen. Nach dem Build liegen sie unter `dist/data/` und können dort **ohne neuen Build** ausgetauscht werden – Seite neu laden genügt.
+
+### Neue Vitrine hinzufügen
+
+1. In `vitrinen.ods` eine Zeile ergänzen, z. B. `4 | Vitrine 4 | museum4.jpg`.
+2. Das Vitrinenbild nach `public/` legen (hier `public/museum4.jpg`).
+3. Die Objekte in `objekte.ods` mit `vitrine_id` = `4` eintragen.
+4. Detailbilder als `public/detailVitrine4/dtv4-<object_number>.png` ablegen.
+
+> Hinweis: Die Daten werden per `fetch` geladen. Die App muss deshalb über einen Webserver laufen (`npm run dev`, `npm run preview` oder ein beliebiger Server) – ein Öffnen von `index.html` per Doppelklick funktioniert nicht.
 
 ---
 

@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .vscode
+
+# LibreOffice/OpenOffice lock files (created while a spreadsheet is open)
+.~lock.*#

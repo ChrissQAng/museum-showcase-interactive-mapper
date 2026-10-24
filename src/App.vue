@@ -1,27 +1,41 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { allObjects, vitrineConfigs } from './data';
+import { ref, computed, onMounted } from 'vue';
+import { allObjects, vitrineConfigs, loadData } from './data';
 import type { MuseumObject, Language, VitrineConfig } from './types';
 import AppHeader from './components/AppHeader.vue';
 import VitrineView from './components/VitrineView.vue';
 import ObjectDetail from './components/ObjectDetail.vue';
 
-const defaultVitrine: VitrineConfig = vitrineConfigs[0] ?? {
-  id: "1",
-  name: "Default Showcase",
-  imageUrl: "/museum1.jpg"
-};
+// Used until the spreadsheet data is loaded (or if it contains no showcase)
+const emptyVitrine: VitrineConfig = { id: "", name: "" };
+
+const defaultVitrine = computed<VitrineConfig>(() => vitrineConfigs.value[0] ?? emptyVitrine);
 
 const language = ref<Language>('de');
-const selectedVitrineId = ref<string>(defaultVitrine.id);
+const selectedVitrineId = ref<string>('');
 const selectedObject = ref<MuseumObject | null>(null);
 
+const isLoading = ref(true);
+const loadError = ref<string | null>(null);
+
+onMounted(async () => {
+  try {
+    await loadData();
+    selectedVitrineId.value = defaultVitrine.value.id;
+  } catch (error) {
+    console.error(error);
+    loadError.value = error instanceof Error ? error.message : String(error);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
 const filteredObjects = computed(() => {
-  return allObjects.filter(obj => obj.vitrine_id === selectedVitrineId.value);
+  return allObjects.value.filter(obj => obj.vitrine_id === selectedVitrineId.value);
 });
 
 const activeVitrine = computed<VitrineConfig>(() => {
-  return vitrineConfigs.find(v => v.id === selectedVitrineId.value) ?? defaultVitrine;
+  return vitrineConfigs.value.find(v => v.id === selectedVitrineId.value) ?? defaultVitrine.value;
 });
 
 const languages: Language[] = ['de', 'en', 'jp'];
@@ -38,7 +52,13 @@ const languages: Language[] = ['de', 'en', 'jp'];
       @update:vitrine="(id) => { selectedVitrineId = id; selectedObject = null; }"
     />
 
-    <main class="container mx-auto px-6">
+    <!-- Loading / error state while the spreadsheet files are fetched -->
+    <main v-if="isLoading || loadError" class="container mx-auto px-6 py-12 text-center">
+      <p v-if="isLoading" class="text-neutral-600 italic">Daten werden geladen …</p>
+      <p v-else class="text-[#bc002d]">Fehler beim Laden der Daten: {{ loadError }}</p>
+    </main>
+
+    <main v-else class="container mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
         <!-- Main Content Area (Showcase View) -->
